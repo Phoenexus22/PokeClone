@@ -1,9 +1,9 @@
-#include <string>
 #include "typedef.h"
 #include "pokenums.h"
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 using namespace std;
 f32 naturePerStat(i16 nature, i16 stat)
 {
@@ -32,7 +32,36 @@ struct species
     species* evoPtr;// ptr to the pokemon species evolved into. is reservation for null mon
 };
 
-struct pokemon
+
+typedef struct pokemon pokemon;
+typedef struct battleMove battleMove;
+
+
+
+struct battleMove
+{
+    string name = "MissingNo.";
+    string description = "";
+    u16 moveID = 0x0000;
+    u8 type1 = Types::NONE;
+    u8 type2 = Types::NONE;
+    u8 power = 50;
+    u8 PP = 20;
+    u8 accuracy = 100;// 0 means always hits and ignores acc/evasion
+    u8 moveType = MoveType::PHYSICAL;
+    u8 statusEffect = Status::NONE;
+    bool statusTargetOppo = true;
+    u8 statChanged = Stat::SPEED;
+    bool statTargetOppo = false;
+    u8 effectChance = 0;//as percentage of 100
+    u8 statusChance = 0;//as percentage of 100
+    i8 priority = 0;// 0 is standard
+    void (*use) (battleMove*, pokemon*, pokemon*);// this, user, target
+    void (*use2) (battleMove*, pokemon*, pokemon*);// usually nothing - used for moves like giga drain
+    bool makesContact = true;
+};
+
+struct pokemon// in battle pokemon have a
 {
     u16 speciesID;
     species* speciesPtr;
@@ -52,10 +81,22 @@ struct pokemon
     u8 EVs[6] = {0, 0, 0, 0, 0, 0};
     u8 IVs[6] = {0, 0, 0, 0, 0, 0};// 0-31
     u8 nature = Nature::SERIOUS;
+    battleMove* moves[4];
+    u16 moveIDs[4] = {0x0000, 0x0000, 0x0000, 0x0000};
     bool isEgg;
     bool isShiny;
     void (*updateStats)(pokemon*);//should technically belong to species.
 };
+struct battlemon// must be destroyed after every battle
+{
+    pokemon* pokePtr;
+    u8 confusionLevel = 0;//0 is not confused, anything abobe is number of turns
+    i8 statStages[6] = {0, 0, 0, 0, 0, 0};//HP is not used, but this means the enums work
+    i8* evasion = statStages;
+
+};
+
+
 
 string stringifyPokemon(pokemon* pokeref)
 {

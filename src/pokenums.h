@@ -108,6 +108,16 @@ namespace Types{
     };
 }
 
+namespace MoveType
+{
+    enum MoveType
+    {
+        PHYSICAL,
+        SPECIAL,
+        STATUS
+    };
+}
+
 namespace ExpGroup
 {
     enum ExpGroup

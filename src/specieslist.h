@@ -1,5 +1,5 @@
 #include "pokeEngine.h"
-species** genSpecArray()
+void genSpecArray(species** specarray)
 {
     species MissingNo;
     //Fire Bug
@@ -52,7 +52,7 @@ species** genSpecArray()
 
     species Kaliproud;
     Kaliproud.name = "Kaliproud";
-    Kaliproud.speciesID = 0x0008;
+    Kaliproud.speciesID = 0x0009;
     Kaliproud.type1 = Types::WATER;
     Kaliproud.type2 = Types::FAIRY;
     Kaliproud.baseStats[Stat::HP] = 96;
@@ -75,7 +75,9 @@ species** genSpecArray()
     //
 
 
-    species* specarray[256];
+    //species* specarray[256];
     specarray[0x0000] = &MissingNo;
     specarray[0x0007] = &Kalip;
+    specarray[0x0008] = &Kaliputt;
+    specarray[0x0009] = &Kaliproud;
 } 
