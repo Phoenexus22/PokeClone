@@ -216,10 +216,10 @@ f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )
                 case Types::FIRE:
                     switch (tartypes[n])
                     {
-                        case Types::GRASS:case Types::ICE:case Types::BUG:case Types::STEEL:
+                        case Types::GRASS: case Types::ICE: case Types::BUG: case Types::STEEL:
                             retval*=2.0f;
                             break;
-                        case Types::FIRE:case Types::WATER:case Types::ROCK:case Types::DRAGON:
+                        case Types::FIRE: case Types::WATER: case Types::ROCK: case Types::DRAGON:
                             retval*=0.5f;
                             break;
                     }
@@ -228,10 +228,10 @@ f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )
                 case Types::WATER:
                     switch(tartypes[n])
                     {
-                        case Types::FIRE:case Types::GROUND:case Types::ROCK:
+                        case Types::FIRE: case Types::GROUND: case Types::ROCK:
                             retval*=2.0f;
                             break;
-                        case Types::WATER:case Types::GRASS:case Types::DRAGON:
+                        case Types::WATER: case Types::GRASS: case Types::DRAGON:
                             retval*=0.5f;
                             break;
                     }
@@ -240,10 +240,10 @@ f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )
                 case Types::GRASS:
                     switch(tartypes[n])
                     {
-                        case Types::WATER:case Types::GROUND:case Types::ROCK:
+                        case Types::WATER: case Types::GROUND: case Types::ROCK:
                             retval*=2.0f;
                             break;
-                        case Types::FIRE:case Types::GRASS:case Types::POISON:case Types::FLYING:case Types::BUG:case Types::DRAGON:case Types::STEEL:
+                        case Types::FIRE: case Types::GRASS: case Types::POISON: case Types::FLYING: case Types::BUG: case Types::DRAGON: case Types::STEEL:
                             retval*=0.5f;
                             break;
                     }
@@ -252,10 +252,10 @@ f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )
                 case Types::ELECTRIC:
                     switch(tartypes[n])
                     {
-                        case Types::WATER:case Types::FLYING:
+                        case Types::WATER: case Types::FLYING:
                             retval*=2.0f;
                             break;
-                        case Types::GRASS:case Types::ELECTRIC:case Types::DRAGON:
+                        case Types::GRASS: case Types::ELECTRIC: case Types::DRAGON:
                             retval*=0.5f;
                             break;
                         case Types::GROUND:
@@ -267,10 +267,171 @@ f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )
                 case Types::ICE:
                     switch(tartypes[n])
                     {
-                        case Types::GRASS:case Types::GROUND:case Types::FLYING:case Types::DRAGON:
+                        case Types::GRASS: case Types::GROUND: case Types::FLYING: case Types::DRAGON:
                             retval*=2.0f;
                             break;
-                        case Types::FIRE:case Types::WATER:case Types::ICE:case Types::STEEL:
+                        case Types::FIRE: case Types::WATER: case Types::ICE: case Types::STEEL:
+                            retval*=0.5f;
+                            break;
+                    }
+                    break;
+
+                case Types::FIGHTING:
+                    switch(tartypes[n])
+                    {
+                        case Types::NORMAL: case Types::ICE: case Types::ROCK: case Types::DARK: case Types::STEEL:
+                            retval*=2.0f;
+                            break;
+                        case Types::POISON: case Types::FLYING: case Types::PSYCHIC: case Types::BUG: case Types::FAIRY:
+                            retval*=0.5f;
+                            break;
+                        case Types::GHOST:
+                            retval*=0.0f;
+                            break;
+                    }
+                    break;
+
+                case Types::POISON:
+                    switch (tartypes[n])
+                    {
+                        case Types::GRASS: case Types::FAIRY:
+                            retval*=2.0f;
+                            break;
+                        case Types::POISON: case Types::GROUND: case Types::ROCK: case Types::GHOST:
+                            retval*=0.5f;
+                            break;
+                        case Types::STEEL:
+                            retval*=0.0f;
+                            break;
+                    }
+                    break;
+
+                case Types::GROUND:
+                    switch(tartypes[n])
+                    {
+                        case Types::FIRE: case Types::ELECTRIC: case Types::POISON: case Types::ROCK: case Types::STEEL:
+                            retval*=2.0f;
+                            break;
+                        case Types::GRASS: case Types::BUG:
+                            retval*=0.5f;
+                            break;
+                        case Types::FLYING:
+                            retval*=0.0f;
+                            break;
+                    }
+                    break;
+                
+                case Types::FLYING:
+                    switch(tartypes[n])
+                    {
+                        case Types::GRASS: case Types::FIGHTING: case Types::BUG:
+                            retval*=2.0f;
+                            break;
+                        case Types::ELECTRIC: case Types::ROCK: case Types::STEEL:
+                            retval*=0.5f;
+                            break;
+                    }
+                    break;
+
+                case Types::PSYCHIC:
+                    switch(tartypes[n])
+                    {
+                        case Types::FIGHTING: case Types::POISON:
+                            retval*=2.0f;
+                            break;
+                        case Types::PSYCHIC: case Types::STEEL:
+                            retval*=0.5;
+                            break;
+                        case Types::DARK:
+                            retval*=0.0f;
+                            break;
+                    }
+                    break;
+                
+                case Types::BUG:
+                    switch(tartypes[n])
+                    {
+                        case Types::GRASS: case Types::PSYCHIC: case Types::DARK:
+                            retval*=2.0f;
+                            break;
+                        case Types::FIRE: case Types::FIGHTING: case Types::POISON: case Types::FLYING: case Types::GHOST: case Types::STEEL: case Types::FAIRY:
+                            retval*=0.5f;
+                            break;
+                    }
+                    break;
+
+                case Types::ROCK:
+                    switch(tartypes[n])
+                    {
+                        case Types::FIRE: case Types::ICE: case Types::FLYING: case Types::BUG: 
+                            retval*=2.0f;
+                            break;
+                        case Types::FIGHTING: case Types::GROUND: case Types::STEEL:
+                            retval*=0.5f;
+                            break;
+                    }
+                    break;
+
+                case Types::GHOST:
+                    switch(tartypes[n])
+                    {
+                        case Types::PSYCHIC: case Types::GHOST: 
+                            retval*=2.0f;
+                            break;
+                        case Types::DARK:
+                            retval*=0.5f;
+                            break;
+                        case Types::NORMAL:
+                            retval*=0.0f;
+                            break;
+                    }
+
+                case Types::DRAGON:
+                    switch (tartypes[n])
+                    {
+                        case Types::DRAGON:
+                            retval*=2.0f;
+                            break;
+                        case Types::STEEL:
+                            retval*=0.5f;
+                            break;
+                        case Types::FAIRY:
+                            retval*=0.0f;
+                            break;
+                    }
+
+                    break;
+                case Types::DARK:
+                    switch (tartypes[n])
+                    {
+                        case Types::PSYCHIC: case Types::GHOST:
+                            retval*=2.0f;
+                            break;
+                        case Types::FIGHTING: case Types::DARK: case Types::FAIRY:
+                            retval*=0.5f;
+                            break;
+                    }
+                    break;
+
+                case Types::STEEL:
+                    switch (tartypes[n])
+                    {
+                        case Types::ICE: case Types::ROCK: case Types::FAIRY:
+                            retval*=2.0f;
+                            break;
+                        case Types::FIRE: case Types::WATER: case Types::ELECTRIC: case Types::STEEL:
+                            retval*=0.5f;
+                            break;
+                    }
+                    break;
+                
+                case Types::FAIRY:
+                    switch (tartypes[n])
+                    {
+                        case Types::FIGHTING: case Types::DRAGON: case Types::DARK:
+                            retval*=2.0f;
+                            break;
+                        case Types::FIRE: case Types::POISON: case Types::STEEL:
                             retval*=0.5f;
                             break;
                     }

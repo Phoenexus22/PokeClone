@@ -1,5 +1,5 @@
 #include<iostream>
-#include "pokeEngine.h"
+//#include "pokeEngine.h"
 #include "specieslist.h"
 using namespace std;
 int main()
@@ -30,4 +30,5 @@ int main()
     genNature(&neddy);
     basicUpdateStats(&neddy);
     cout << stringifyPokemon(&neddy);
+    cout << to_string(typeEfficacy(Types::FIGHTING, Types::GROUND, Types::ROCK, Types::STEEL));
 }
