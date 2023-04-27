@@ -34,12 +34,16 @@ int main()
     cout << stringifyPokemon(neddy);
     cout << to_string(typeEfficacy(Types::GRASS, Types::STEEL, Types::WATER, Types::ROCK)) <<"\n\n";
     
-    pokemon uberkalp = {0x0007, &specArray[0x0007]};
+    pokemon uberkalp = {Species::KALIP, &specArray[Species::KALIP]};
     uberkalp.level = 100;
     updateMinExp(uberkalp);
     genGender(uberkalp);
     genIVs(uberkalp);
     genNature(uberkalp);
     basicUpdateStats(uberkalp);
+    cout << stringifyPokemon(uberkalp);
+    evolve(uberkalp);
+    cout << stringifyPokemon(uberkalp);
+    evolve(uberkalp);
     cout << stringifyPokemon(uberkalp);
 }

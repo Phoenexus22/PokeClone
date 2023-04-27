@@ -84,8 +84,8 @@ struct pokemon// in battle pokemon have a
     battleMove* moves[4];
     u16 moveIDs[4] = {0x0000, 0x0000, 0x0000, 0x0000};
     u8 currentPP[4] = {0, 0, 0, 0};
-    bool isEgg;
-    bool isShiny;
+    bool isEgg = false;
+    bool isShiny = false;
     void (*updateStats)(pokemon);//should technically belong to species.
 };
 
@@ -228,13 +228,35 @@ void populatePtrs(pokemon& pokeref, species specarray[])
 
 void evolve(pokemon& pokeref)
 {
-    pokemon evolved = {};
+    species& evolution = *(*pokeref.speciesPtr).evoPtr;
+    pokemon evolved = {evolution.speciesID, &evolution};
+    evolved = pokeref;
+
     if (pokeref.name == (*pokeref.speciesPtr).name)
     {
-
+        evolved.name = evolution.name;
     }
+    evolved.speciesID = evolution.speciesID;
+    evolved.speciesPtr = &evolution;
     pokeref = evolved;
+    basicUpdateStats(pokeref);
+    /*
+    evolved.IVs[Stat::HP] = pokeref.IVs[Stat::HP];
+    evolved.IVs[Stat::ATTACK] = pokeref.IVs[Stat::ATTACK];
+    evolved.IVs[Stat::DEFENCE] = pokeref.IVs[Stat::DEFENCE];
+    evolved.IVs[Stat::SPATTACK] = pokeref.IVs[Stat::SPATTACK];
+    evolved.IVs[Stat::SPDEFENCE] = pokeref.IVs[Stat::SPDEFENCE];
+    evolved.IVs[Stat::SPEED] = pokeref.IVs[Stat::SPEED];
 
+    evolved.EVs[Stat::HP] = pokeref.EVs[Stat::HP];
+    evolved.EVs[Stat::ATTACK] = pokeref.EVs[Stat::ATTACK];
+    evolved.EVs[Stat::DEFENCE] = pokeref.EVs[Stat::DEFENCE];
+    evolved.EVs[Stat::SPATTACK] = pokeref.EVs[Stat::SPATTACK];
+    evolved.EVs[Stat::SPDEFENCE] = pokeref.EVs[Stat::SPDEFENCE];
+    evolved.EVs[Stat::SPEED] = pokeref.EVs[Stat::SPEED];
+    evolved.level = pokeref.level;
+    evolved.levelCaught = pokeref.levelCaught;
+    evolved.nature = pokeref.nature;*/
 }
 
 f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )
