@@ -83,25 +83,26 @@ struct pokemon// in battle pokemon have a
     u8 nature = Nature::SERIOUS;
     battleMove* moves[4];
     u16 moveIDs[4] = {0x0000, 0x0000, 0x0000, 0x0000};
+    u8 currentPP[4] = {0, 0, 0, 0};
     bool isEgg;
     bool isShiny;
-    void (*updateStats)(pokemon*);//should technically belong to species.
+    void (*updateStats)(pokemon);//should technically belong to species.
 };
+
 struct battlemon// must be destroyed after every battle
 {
     pokemon* pokePtr;
     u8 confusionLevel = 0;//0 is not confused, anything abobe is number of turns
     i8 statStages[6] = {0, 0, 0, 0, 0, 0};//HP is not used, but this means the enums work
-    i8* evasion = statStages;
+    i8& evasion = statStages[0];
 
 };
 
 
 
-string stringifyPokemon(pokemon* pokeref)
+string stringifyPokemon(pokemon& poke)
 {
-    pokemon& poke = *pokeref;
-    return "Species: " + (*(poke.speciesPtr)).name + "\n"
+    return "Species: " + (*poke.speciesPtr).name + "\n"
     + "Name: " + poke.name + "\nOT: " + poke.OT + "\n"
     + "Gender: " + ((poke.gender)?((poke.gender == -1)?"N/A":"\u2642"):"\u2640")+"\n"
     + "Level: " + to_string(poke.level) + "\nEXP: " + to_string(poke.exp) + "\n"
@@ -114,9 +115,8 @@ string stringifyPokemon(pokemon* pokeref)
 
 }
 
-void genGender(pokemon* pokeref)
+void genGender(pokemon& poke)
 {
-    pokemon& poke = (*pokeref);
     if ((*poke.speciesPtr).genderSplit == 255)
     {
         poke.gender = Gender::UNKNOWN;
@@ -127,9 +127,8 @@ void genGender(pokemon* pokeref)
 
 }
 
-void genIVs(pokemon* pokeref)
+void genIVs(pokemon& poke)
 {
-    pokemon& poke = (*pokeref);
     if(rand()%8192==4096)
     {
         poke.isShiny = true;
@@ -149,14 +148,13 @@ void genIVs(pokemon* pokeref)
         poke.IVs[Stat::SPEED] = rand() % 32;
     }
 }
-void genNature(pokemon* pokeref)
+void genNature(pokemon& pokeref)
 {
-    (*pokeref).nature = rand() %(Nature::LAST+1);
+    pokeref.nature = rand() %(Nature::LAST+1);
 }
 
-void basicUpdateStats(pokemon* pokeref)
+void basicUpdateStats(pokemon& poke)
 {
-    pokemon& poke = *pokeref;
     poke.stats[Stat::HP] = floor(((2*(*poke.speciesPtr).baseStats[Stat::HP] + poke.IVs[Stat::HP]+(poke.EVs[Stat::HP]/4))*poke.level)/100)+poke.level+10;
     for(int i = 1; i <= Stat::LAST; i++)
     {
@@ -164,9 +162,8 @@ void basicUpdateStats(pokemon* pokeref)
     }
 }
 
-u32 queryMinExp(pokemon* pokeref)
+u32 queryMinExp(pokemon& poke)
 {
-    pokemon& poke = *pokeref;
     switch ((*poke.speciesPtr).expGroup)
     {
         case ExpGroup::FAST:
@@ -186,14 +183,13 @@ u32 queryMinExp(pokemon* pokeref)
             break;
     }
 }
-void updateMinExp(pokemon* pokeref)
+void updateMinExp(pokemon& pokeref)
 {
-    (*pokeref).exp = queryMinExp(pokeref);
+    pokeref.exp = queryMinExp(pokeref);
 }
 
-u8 queryLevel(pokemon* pokeref)
+u8 queryLevel(pokemon& poke)
 {
-    pokemon& poke = *pokeref;
     switch ((*poke.speciesPtr).expGroup)
     {
         case ExpGroup::FAST:
@@ -214,21 +210,31 @@ u8 queryLevel(pokemon* pokeref)
     }
 }
 
-void updateLevel(pokemon* pokeref)
+void updateLevel(pokemon& pokeref)
 {
-    (*pokeref).level = queryLevel(pokeref);
+    pokeref.level = queryLevel(pokeref);
 }
-void forceLevelUp(pokemon* pokeref)
+void forceLevelUp(pokemon& poke)
 {
-    pokemon& poke = *pokeref;
     poke.level++;
-    updateMinExp(&poke);
-    basicUpdateStats(&poke);
+    updateMinExp(poke);
+    basicUpdateStats(poke);
 }
 
-void populatePtrs(pokemon* pokeref, species** specarray)
+void populatePtrs(pokemon& pokeref, species specarray[])
 {
-    (*pokeref).speciesPtr = specarray[(*pokeref).speciesID];
+    pokeref.speciesPtr = &specarray[pokeref.speciesID];
+}
+
+void evolve(pokemon& pokeref)
+{
+    pokemon evolved = {};
+    if (pokeref.name == (*pokeref.speciesPtr).name)
+    {
+
+    }
+    pokeref = evolved;
+
 }
 
 f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )

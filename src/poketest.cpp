@@ -5,7 +5,7 @@ using namespace std;
 int main()
 {
     srand(time(0));
-    species* specArray[256];
+    species specArray[256];
     genSpecArray(specArray);
     species alakazam;
     alakazam.name = "Alakazam";
@@ -26,13 +26,20 @@ int main()
 
     pokemon neddy = {0x0003, &alakazam};
     neddy.level = 100;
-    updateMinExp(&neddy);
-    genGender(&neddy);
-    genIVs(&neddy);
-    genNature(&neddy);
-    basicUpdateStats(&neddy);
-    cout << stringifyPokemon(&neddy);
-    cout << to_string(typeEfficacy(Types::FIGHTING, Types::GROUND, Types::ROCK, Types::STEEL)) <<"\n\n";
-    pokemon uberkalp = {0x0007, specArray[0x0007]};
-    cout << stringifyPokemon(&uberkalp);
+    updateMinExp(neddy);
+    genGender(neddy);
+    genIVs(neddy);
+    genNature(neddy);
+    basicUpdateStats(neddy);
+    cout << stringifyPokemon(neddy);
+    cout << to_string(typeEfficacy(Types::GRASS, Types::STEEL, Types::WATER, Types::ROCK)) <<"\n\n";
+    
+    pokemon uberkalp = {0x0007, &specArray[0x0007]};
+    uberkalp.level = 100;
+    updateMinExp(uberkalp);
+    genGender(uberkalp);
+    genIVs(uberkalp);
+    genNature(uberkalp);
+    basicUpdateStats(uberkalp);
+    cout << stringifyPokemon(uberkalp);
 }
