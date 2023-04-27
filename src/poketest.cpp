@@ -20,30 +20,36 @@ int main()
     alakazam.baseStats[Stat::SPEED] = 120;
     //alakazam.abilities;
     alakazam.expGroup = ExpGroup::MEDSLOW;
+    alakazam.EVYield = 3;
+    alakazam.EVYieldType = Stat::SPATTACK;
     alakazam.baseFriendship = 50;
     alakazam.catchRate = 50;
     alakazam.genderSplit = 191;
 
     pokemon neddy = {0x0003, &alakazam};
     neddy.level = 100;
+    neddy.levelCaught = 1;
     updateMinExp(neddy);
     genGender(neddy);
     genIVs(neddy);
     genNature(neddy);
     basicUpdateStats(neddy);
     cout << stringifyPokemon(neddy);
-    cout << to_string(typeEfficacy(Types::GRASS, Types::STEEL, Types::WATER, Types::ROCK)) <<"\n\n";
     
     pokemon uberkalp = {Species::KALIP, &specArray[Species::KALIP]};
-    uberkalp.level = 100;
+    uberkalp.level = 10;
     updateMinExp(uberkalp);
     genGender(uberkalp);
     genIVs(uberkalp);
     genNature(uberkalp);
     basicUpdateStats(uberkalp);
     cout << stringifyPokemon(uberkalp);
-    evolve(uberkalp);
-    cout << stringifyPokemon(uberkalp);
-    evolve(uberkalp);
-    cout << stringifyPokemon(uberkalp);
+    while (uberkalp.level < 38)
+    {
+        debugDefeat(uberkalp, neddy);
+        cout << stringifyPokemon(uberkalp);
+    }
+    
+    
+
 }

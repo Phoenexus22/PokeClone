@@ -59,7 +59,6 @@ void genSpecArray(species specarray[256])
     specarray[Species::KALIP].evoPtr  = &specarray[Species::KALIPUTT];
 //
 
-
     species Kaliproud;
     specarray[Species::KALIPROUD].name = "Kaliproud";
     specarray[Species::KALIPROUD].speciesID = 0x0009;

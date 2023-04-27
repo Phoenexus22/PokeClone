@@ -70,7 +70,7 @@ struct pokemon// in battle pokemon have a
     i8 gender = -1;
     u16 abilityID = 0x0000;
     u8 level = 1;
-    u8 levelCaught = 0; // 0 if uncaught
+    u8 levelCaught = 0; // 0 if uncaught must be made non-zero for all trainer pokemon
     u8 friendship = (*speciesPtr).baseFriendship;
     u32 exp = 0;
     bool (*ability)(bool);
@@ -81,6 +81,7 @@ struct pokemon// in battle pokemon have a
     u8 EVs[6] = {0, 0, 0, 0, 0, 0};
     u8 IVs[6] = {0, 0, 0, 0, 0, 0};// 0-31
     u8 nature = Nature::SERIOUS;
+    u8 pokeball = 0x00;
     battleMove* moves[4];
     u16 moveIDs[4] = {0x0000, 0x0000, 0x0000, 0x0000};
     u8 currentPP[4] = {0, 0, 0, 0};
@@ -97,8 +98,6 @@ struct battlemon// must be destroyed after every battle
     i8& evasion = statStages[0];
 
 };
-
-
 
 string stringifyPokemon(pokemon& poke)
 {
@@ -148,6 +147,7 @@ void genIVs(pokemon& poke)
         poke.IVs[Stat::SPEED] = rand() % 32;
     }
 }
+
 void genNature(pokemon& pokeref)
 {
     pokeref.nature = rand() %(Nature::LAST+1);
@@ -183,6 +183,7 @@ u32 queryMinExp(pokemon& poke)
             break;
     }
 }
+
 void updateMinExp(pokemon& pokeref)
 {
     pokeref.exp = queryMinExp(pokeref);
@@ -214,6 +215,7 @@ void updateLevel(pokemon& pokeref)
 {
     pokeref.level = queryLevel(pokeref);
 }
+
 void forceLevelUp(pokemon& poke)
 {
     poke.level++;
@@ -240,23 +242,55 @@ void evolve(pokemon& pokeref)
     evolved.speciesPtr = &evolution;
     pokeref = evolved;
     basicUpdateStats(pokeref);
-    /*
-    evolved.IVs[Stat::HP] = pokeref.IVs[Stat::HP];
-    evolved.IVs[Stat::ATTACK] = pokeref.IVs[Stat::ATTACK];
-    evolved.IVs[Stat::DEFENCE] = pokeref.IVs[Stat::DEFENCE];
-    evolved.IVs[Stat::SPATTACK] = pokeref.IVs[Stat::SPATTACK];
-    evolved.IVs[Stat::SPDEFENCE] = pokeref.IVs[Stat::SPDEFENCE];
-    evolved.IVs[Stat::SPEED] = pokeref.IVs[Stat::SPEED];
+}
 
-    evolved.EVs[Stat::HP] = pokeref.EVs[Stat::HP];
-    evolved.EVs[Stat::ATTACK] = pokeref.EVs[Stat::ATTACK];
-    evolved.EVs[Stat::DEFENCE] = pokeref.EVs[Stat::DEFENCE];
-    evolved.EVs[Stat::SPATTACK] = pokeref.EVs[Stat::SPATTACK];
-    evolved.EVs[Stat::SPDEFENCE] = pokeref.EVs[Stat::SPDEFENCE];
-    evolved.EVs[Stat::SPEED] = pokeref.EVs[Stat::SPEED];
-    evolved.level = pokeref.level;
-    evolved.levelCaught = pokeref.levelCaught;
-    evolved.nature = pokeref.nature;*/
+void debugStructSize()
+{
+    cout << "\nSpecies: " <<to_string(sizeof(species));
+    cout << "\nPokemon: " <<to_string(sizeof(pokemon));
+    cout << "\nBattlemon: " <<to_string(sizeof(battlemon));
+    cout << "\nBattleMove: " <<to_string(sizeof(battleMove))<<"\n";
+}
+
+void awardEXP(pokemon& winner, pokemon& loser)//hanging variables
+{
+    f32 isOT = 1.0;
+    f32 s;
+    u8 battlenum = 1;
+    u8 expshareno = 0;
+    bool expshare = false;
+    if (expshareno)
+    {
+        s = battlenum;
+    }
+    else 
+    {
+        if (expshare)
+        {
+            s = 2*expshareno;
+        }
+        else{
+            s = 2*battlenum;
+        }
+    }
+    winner.exp += ((loser.speciesPtr->expYield*loser.level/5.0) * ((loser.levelCaught ==0)?1.0f:1.5f) * (1/s) * pow((2*loser.level+10), 2.5)/pow((loser.level + winner.level + 10), 2.5)+1)*isOT;
+}
+void awardEVs(pokemon& winner, pokemon& loser)
+{
+    winner.EVs[loser.speciesPtr->EVYieldType] += loser.speciesPtr->EVYield;
+}
+
+void debugDefeat(pokemon& winner, pokemon& loser)
+{
+    awardEXP(winner, loser);
+    updateLevel(winner);
+    if (winner.level >= (*winner.speciesPtr).evoLevel && (*winner.speciesPtr).evoLevel)
+    {
+        evolve(winner);
+    }
+    awardEVs(winner, loser);
+    basicUpdateStats(winner);
+
 }
 
 f32 typeEfficacy(u8 movtype1, u8 movtype2, u8 tartype1, u8 tartype2 )
